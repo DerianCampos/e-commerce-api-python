@@ -1,0 +1,14 @@
+app:
+  name: "App API"
+  version: "1.0.0"
+
+postgres:
+  username: !ENV ${POSTGRES_USER}
+  password: !ENV ${POSTGRES_PASSWORD}
+  host: "localhost"
+  port: 5432
+  dbname: !ENV ${POSTGRES_DB}
+  echo: true  # SQLAlchemy echo logs
+  pool_size: 10
+  max_over_flow: 10
+  pool_timeout: 30
