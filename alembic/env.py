@@ -8,6 +8,8 @@ fileConfig(config.config_file_name)
 
 # import your metadata
 from app.db import Base
+# Import all models so Alembic can detect them
+from app.models import Product
 
 target_metadata = Base.metadata
 
