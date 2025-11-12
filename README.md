@@ -1,4 +1,3 @@
-```markdown
 # FastAPI + Redis + Async SQLAlchemy cache-aside example
 
 This PR adds an async Redis cache-aside example to the FastAPI app and includes a minimal async SQLAlchemy setup and Alembic configuration.
@@ -14,4 +13,3 @@ Notes:
 - The PR includes a Product model, async DB session dependency, and cache helpers.
 - Cache keys use CACHE_VERSION env var for easy invalidation when payload shape changes.
 - For production use a managed Redis service, TLS, AUTH, and proper monitoring.
-```
