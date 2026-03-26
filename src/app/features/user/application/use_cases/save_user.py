@@ -3,6 +3,7 @@ from src.app.features.user.domain.repositories.user_repository import UserReposi
 from src.app.features.user.application.dtos.user_dto_mapper import map_entity_to_dto_user
 from src.app.features.user.application.dtos.user_dto import UserCreate, UserResponse
 from src.app.features.user.domain.value_objects.email import Email
+from src.app.features.user.domain.value_objects.hashed_password import HashedPassword
 from src.app.features.user.domain.value_objects.role import Role
 from src.shared.domain.value_objects.entity_id import EntityId
 from src.shared.utils.log_util import log
@@ -18,12 +19,14 @@ class SaveUser:
             entity_id = EntityId.generate()
             email_vo = Email(user_create.email)
             role_vo = Role.from_str(user_create.role)
+            hashed_password_vo = HashedPassword.from_plain_text(user_create.password)
 
             user_entity = UserEntity(
                 id=entity_id,
                 email=email_vo,
                 first_name=user_create.first_name,
                 last_name=user_create.last_name,
+                hashed_password=hashed_password_vo,
                 role=role_vo,
                 is_active=True,
             )
