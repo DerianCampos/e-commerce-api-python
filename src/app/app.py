@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.app.config.app_config import AppConfig
 
+from src.app.features.user.presentation.web.routes.user_routes import router as user_router
+
 ENV = os.getenv("APP_ENV", "local")
 
 config = AppConfig.instance()
@@ -39,3 +41,4 @@ def read_root():
 def get_health_check():
     return "Ok"
 
+fastApiApp.include_router(user_router, prefix="/v1/user", tags=["User"])
