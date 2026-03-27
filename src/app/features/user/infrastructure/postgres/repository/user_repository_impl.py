@@ -65,6 +65,7 @@ class UserRepositoryImpl(UserRepository):
                 email=str(entity.email.value) if hasattr(entity.email, 'value') else str(entity.email),
                 first_name=entity.first_name,
                 last_name=entity.last_name,
+                hashed_password=entity.hashed_password.value,
                 role=str(entity.role.value) if hasattr(entity.role, 'value') else str(entity.role),
                 is_active=bool(entity.is_active),
             )
@@ -108,6 +109,7 @@ class UserRepositoryImpl(UserRepository):
         existing.email = str(entity.email.value) if hasattr(entity.email, 'value') else str(entity.email)
         existing.first_name = entity.first_name
         existing.last_name = entity.last_name
+        existing.hashed_password = entity.hashed_password.value
         existing.role = str(entity.role.value) if hasattr(entity.role, 'value') else str(entity.role)
         existing.is_active = bool(entity.is_active)
 
