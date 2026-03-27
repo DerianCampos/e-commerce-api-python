@@ -1,3 +1,4 @@
+from src.app.features.user.application.use_cases.delete_user import DeleteUserUseCase
 from src.app.features.user.application.use_cases.get_user_by_id import GetUserByIdUseCase
 from src.app.features.user.application.use_cases.save_user import SaveUser
 from src.app.features.user.domain.repositories.user_repository import UserRepository
@@ -18,3 +19,9 @@ class UserService:
         use_case = SaveUser(self.user_repository)
 
         return await use_case.execute(user_create)
+
+    async def delete_user(self, user_id: str) -> bool:
+        use_case = DeleteUserUseCase(self.user_repository)
+
+        return await use_case.execute(user_id)
+
