@@ -36,3 +36,17 @@ async def create_user(user_create: UserCreate, user_service: UserService = Depen
     user_result = await user_service.save_user(user_create)
 
     return user_result
+
+
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_user(user_id: UUID, user_service: UserService = Depends(get_user_service)) -> None:
+    """
+    Delete a user by their ID.
+
+    Args:
+        user_id (UUID): The user's unique identifier.
+
+    Returns:
+        None: Returns 204 No Content on success.
+    """
+    await user_service.delete_user(str(user_id))
