@@ -3,7 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter, status
 from fastapi.params import Depends
 
-from src.app.features.user.application.dtos.user_dto import UserResponse, UserCreate
+from src.app.features.user.application.dtos.user_dto import UserResponse, UserCreate, UserUpdate
 from src.app.features.user.application.services.user_service import UserService
 from src.app.features.user.presentation.web.dependencies import get_user_service
 
@@ -50,3 +50,23 @@ async def delete_user(user_id: UUID, user_service: UserService = Depends(get_use
         None: Returns 204 No Content on success.
     """
     await user_service.delete_user(str(user_id))
+
+
+@router.patch("/{user_id}", response_model=UserResponse, status_code=status.HTTP_200_OK)
+async def update_user(
+    user_id: UUID,
+    user_update: UserUpdate,
+    user_service: UserService = Depends(get_user_service)
+) -> UserResponse:
+    """
+    Partially update a user by their ID.
+
+    Args:
+        user_id (UUID): The user's unique identifier.
+        user_update (UserUpdate): The fields to update.
+
+    Returns:
+        UserResponse: The updated user's details.
+    """
+    return await user_service.update_user(str(user_id), user_update)
+

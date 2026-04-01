@@ -1,8 +1,9 @@
 from src.app.features.user.application.use_cases.delete_user import DeleteUserUseCase
 from src.app.features.user.application.use_cases.get_user_by_id import GetUserByIdUseCase
 from src.app.features.user.application.use_cases.save_user import SaveUser
+from src.app.features.user.application.use_cases.update_user import UpdateUserUseCase
 from src.app.features.user.domain.repositories.user_repository import UserRepository
-from src.app.features.user.application.dtos.user_dto import UserCreate, UserResponse
+from src.app.features.user.application.dtos.user_dto import UserCreate, UserResponse, UserUpdate
 
 
 class UserService:
@@ -24,4 +25,9 @@ class UserService:
         use_case = DeleteUserUseCase(self.user_repository)
 
         return await use_case.execute(user_id)
+
+    async def update_user(self, user_id: str, user_update: UserUpdate) -> UserResponse:
+        use_case = UpdateUserUseCase(self.user_repository)
+
+        return await use_case.execute(user_id, user_update)
 

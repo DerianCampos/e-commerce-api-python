@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
 
@@ -27,3 +29,20 @@ class UserCreate(BaseModel):
     password: str
     role: str = "user"
     is_active: bool = True
+
+
+class UserUpdate(BaseModel):
+    """
+    DTO for partial user updates.
+    All fields are optional - only provided fields will be updated.
+    Note: role and is_active are managed via admin-only endpoints.
+    """
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )
+
+    email: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+
