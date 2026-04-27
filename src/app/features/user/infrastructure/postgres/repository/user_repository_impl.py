@@ -1,7 +1,7 @@
 from typing import Optional, List
 
 from sqlalchemy import select, update as sa_update, delete as sa_delete
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, OperationalError, SQLAlchemyError
 
 from src.app.features.user.domain.entities.user_entity import UserEntity
 from src.app.features.user.domain.repositories.user_repository import UserRepository
@@ -80,9 +80,13 @@ class UserRepositoryImpl(UserRepository):
             await self.db_session.rollback()
             log.error(f"Integrity error saving user: {ie}")
             raise
-        except Exception as e:
+        except OperationalError as e:
             await self.db_session.rollback()
-            log.error(f"Unexpected error saving user: {e}")
+            log.error(f"Operational error saving user (connection/timeout issue): {e}")
+            raise
+        except SQLAlchemyError as e:
+            await self.db_session.rollback()
+            log.error(f"Database error saving user: {e}")
             raise
 
     async def find_all(self, limit: Optional[int] = None, offset: Optional[int] = None) -> List[T]:
@@ -118,9 +122,18 @@ class UserRepositoryImpl(UserRepository):
             await self.db_session.commit()
             await self.db_session.refresh(existing)
             return map_model_to_entity(existing)
-        except Exception as e:
+
+        except IntegrityError as ie:
             await self.db_session.rollback()
-            log.error(f"Unexpected error updating user: {e}")
+            log.error(f"Integrity error updating user: {ie}")
+            raise
+        except OperationalError as e:
+            await self.db_session.rollback()
+            log.error(f"Operational error updating user (connection/timeout issue): {e}")
+            raise
+        except SQLAlchemyError as e:
+            await self.db_session.rollback()
+            log.error(f"Database error updating user: {e}")
             raise
 
     async def delete(self, entity_id: ID) -> bool:
@@ -132,8 +145,13 @@ class UserRepositoryImpl(UserRepository):
             await self.db_session.delete(existing)
             await self.db_session.commit()
             return True
-        except Exception as e:
+
+        except OperationalError as e:
             await self.db_session.rollback()
-            log.error(f"Unexpected error deleting user: {e}")
+            log.error(f"Operational error deleting user (connection/timeout issue): {e}")
+            raise
+        except SQLAlchemyError as e:
+            await self.db_session.rollback()
+            log.error(f"Database error deleting user: {e}")
             raise
 
