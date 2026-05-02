@@ -11,7 +11,7 @@ class UserService:
     def __init__(self, user_repository: UserRepository):
         self.user_repository = user_repository
 
-    async def get_user_by_id(self, user_id: str):
+    async def get_user_by_id(self, user_id: str) -> UserResponse:
         use_case = GetUserByIdUseCase(self.user_repository)
 
         return await use_case.execute(user_id)
