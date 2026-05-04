@@ -43,15 +43,12 @@ class UpdateUserUseCase:
                 log.warning(f"Cannot update user. User not found with ID: {user_id}")
                 raise UserDoesNotExistException(user_entity_id)
 
-            # Apply partial updates (only non-None fields)
-            if user_update.email is not None:
-                existing_user.email = Email(user_update.email)
-
-            if user_update.first_name is not None:
-                existing_user.first_name = user_update.first_name
-
-            if user_update.last_name is not None:
-                existing_user.last_name = user_update.last_name
+            # Apply partial updates using domain method (atomic update with single timestamp)
+            existing_user.update_profile(
+                email=Email(user_update.email) if user_update.email is not None else None,
+                first_name=user_update.first_name,
+                last_name=user_update.last_name
+            )
 
             # Persist changes
             updated_user = await self.user_repository.update(existing_user)
