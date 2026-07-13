@@ -2,9 +2,11 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from src.app.config.app_config import AppConfig
 
-from src.app.features.user.presentation.web.routes.user_routes import router as user_router
+from src.app.features.user.presentation.user_routes import router as user_router
+
 
 ENV = os.getenv("APP_ENV", "local")
 
@@ -12,19 +14,19 @@ config = AppConfig.instance()
 app_name = config.get_config("app.name")
 app_version = config.get_config("app.version")
 
-fastApiApp = FastAPI(title=app_name, version=app_version)
+fastapi_app = FastAPI(title=app_name, version=app_version)
 
 if ENV not in ("local", "docker"):
-    fastApiApp.docs_url = None
-    fastApiApp.redoc_url = None
-    fastApiApp.openapi_url = None
+    fastapi_app.docs_url = None
+    fastapi_app.redoc_url = None
+    fastapi_app.openapi_url = None
 
 # --- CORS Origins from config ---
 origins = [
-    "http://localhost"
+    "http://localhost:*"
 ]
 
-fastApiApp.add_middleware(
+fastapi_app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
@@ -32,13 +34,13 @@ fastApiApp.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-@fastApiApp.get("/")
+@fastapi_app.get("/")
 def read_root():
     return {"message": "Welcome to the E-Commerce API"}
 
 
-@fastApiApp.get("/health")
+@fastapi_app.get("/health")
 def get_health_check():
     return "Ok"
 
-fastApiApp.include_router(user_router, prefix="/v1/user", tags=["User"])
+fastapi_app.include_router(user_router, prefix="/api/v1/user", tags=["User"])

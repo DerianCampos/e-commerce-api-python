@@ -1,12 +1,12 @@
 import os
+
+from threading import Lock
+from typing import Any, Dict, Optional
 from dotenv import load_dotenv
 from pyaml_env import parse_config
-from threading import Lock
-from typing import Dict, Any, Optional
-
-from src.shared.utils.log_util import log
-from src.shared.utils.retry_decorator import retry_on_exception
 from src.app.config.paths import Paths
+from app.shared.utils.log_util import log
+from app.shared.utils.retry_decorator import retry_on_exception
 
 APP_ENV = "APP_ENV"
 DEFAULT_ENVIRONMENT = "dev"
@@ -122,4 +122,3 @@ class AppConfig:
         """
         with cls._lock:
             cls._instance = None
-            

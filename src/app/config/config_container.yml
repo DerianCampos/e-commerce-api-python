@@ -7,7 +7,7 @@ persistence:
   postgres:
     username: !ENV ${POSTGRES_USER}
     password: !ENV ${POSTGRES_PASSWORD}
-    host: localhost
+    host: postgres
     port: 5432
     dbname: !ENV ${POSTGRES_DB}
     echo: true
