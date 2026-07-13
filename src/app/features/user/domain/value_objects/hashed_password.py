@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 import bcrypt
 
-
 # Configurable cost factor (12 is a good balance of security and performance)
 _BCRYPT_ROUNDS = 12
 # Bcrypt maximum password length in bytes
