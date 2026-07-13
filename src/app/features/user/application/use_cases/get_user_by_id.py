@@ -1,10 +1,11 @@
 from uuid import UUID
+
 from src.app.features.user.application.dtos.user_dto import UserResponse
-from src.app.features.user.application.dtos.user_dto_mapper import map_entity_to_dto_user
-from src.app.features.user.application.exceptions.user_exception import UserDoesNotExistException
+from src.app.features.user.application.mappers.user_mapper import to_user_response
+from src.app.features.user.domain.exceptions.user_exception import UserDoesNotExistException
 from src.app.features.user.domain.repositories.user_repository import UserRepository
-from src.shared.domain.value_objects.entity_id import EntityId
-from src.shared.utils.log_util import log
+from app.shared.domain.value_objects.entity_id import EntityId
+from app.shared.utils.log_util import log
 
 
 class GetUserByIdUseCase:
@@ -23,7 +24,7 @@ class GetUserByIdUseCase:
                 log.warning(f"User not found with ID: {user_id}")
                 raise UserDoesNotExistException(user_obj_id)
 
-            response_dto = map_entity_to_dto_user(existing_user)
+            response_dto = to_user_response(existing_user)
 
             return response_dto
 

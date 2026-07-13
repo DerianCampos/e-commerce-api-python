@@ -12,12 +12,13 @@ class UserResponse(BaseModel):
     )
 
     id: str
+    first_name: str
+    last_name: str
     email: str
-    full_name: str
     role: str
     is_active: bool
 
-class UserCreate(BaseModel):
+class UserCreateRequest(BaseModel):
     model_config = ConfigDict(
         alias_generator=to_camel,
         populate_by_name=True,
@@ -27,16 +28,11 @@ class UserCreate(BaseModel):
     first_name: str
     last_name: str
     password: str
-    role: str = "user"
+    role: str
     is_active: bool = True
 
 
-class UserUpdate(BaseModel):
-    """
-    DTO for partial user updates.
-    All fields are optional - only provided fields will be updated.
-    Note: role and is_active are managed via admin-only endpoints.
-    """
+class UserUpdateRequest(BaseModel):
     model_config = ConfigDict(
         alias_generator=to_camel,
         populate_by_name=True,
