@@ -16,14 +16,14 @@ app_version = config.get_config("app.version")
 
 fastapi_app = FastAPI(title=app_name, version=app_version)
 
-if ENV not in ("local", "docker"):
+if ENV not in ("local", "container"):
     fastapi_app.docs_url = None
     fastapi_app.redoc_url = None
     fastapi_app.openapi_url = None
 
 # --- CORS Origins from config ---
 origins = [
-    "http://localhost:*"
+    "http://localhost:8080"
 ]
 
 fastapi_app.add_middleware(
