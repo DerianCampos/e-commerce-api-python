@@ -32,6 +32,8 @@ dependencies = [
     "alembic==1.15.1",
     "asyncpg==0.30.0",
     "greenlet==3.3.0",
+    "aiosqlite==0.20.0",
+    "python-json-logger==4.1.0",
 ]
 
 # Development dependencies (NOT installed in Docker production)
@@ -48,7 +50,7 @@ dev = [
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 asyncio_mode = "auto"
-testpaths = ["tests"]
+testpaths = ["test"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
@@ -93,4 +95,3 @@ ignore = [
 [tool.ruff.lint.isort]
 known-first-party = ["src"]
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
-
