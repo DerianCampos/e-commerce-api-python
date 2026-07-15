@@ -3,8 +3,8 @@
 from logging import Logger
 from typing import Any
 
-from app.shared.logging.context_logger import ContextLogger
-from app.shared.logging.utils import redact_sensitive_fields
+from src.app.shared.logging.context_logger import ContextLogger
+from src.app.shared.logging.utils import redact_sensitive_fields
 
 
 class BusinessLogger(ContextLogger):

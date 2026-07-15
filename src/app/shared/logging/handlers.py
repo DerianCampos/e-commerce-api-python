@@ -4,7 +4,7 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
-from app.shared.logging.formatters import JsonFormatter, TextFormatter
+from src.app.shared.logging.formatters import JsonFormatter, TextFormatter
 
 
 def _make_formatter(fmt: str) -> logging.Formatter:

@@ -1,10 +1,10 @@
 """Database engine factory with config-driven driver selection."""
 
 from src.app.config.app_config import AppConfig
-from app.shared.logging import get_logger
-from app.shared.persistence.db_connection import DbConnection
-from app.shared.persistence.postgres import PostgresDbConnection
-from app.shared.persistence.sqlite import SQLiteDbConnection
+from src.app.shared.logging.logger import get_logger
+from src.app.shared.persistence.db_connection import DbConnection
+from src.app.shared.persistence.postgres import PostgresDbConnection
+from src.app.shared.persistence.sqlite import SQLiteDbConnection
 
 log = get_logger(__name__)
 

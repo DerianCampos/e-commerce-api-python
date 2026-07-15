@@ -3,7 +3,7 @@
 from logging import Logger
 from typing import Any
 
-from app.shared.logging.context_logger import ContextLogger
+from src.app.shared.logging.context_logger import ContextLogger
 
 
 class ApplicationLogger(ContextLogger):
