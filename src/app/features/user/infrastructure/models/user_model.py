@@ -1,7 +1,7 @@
 from sqlalchemy.sql import func
 from sqlalchemy import Boolean, Column, String, DateTime
 
-from app.shared.persistence.base_model import BaseModel
+from src.app.shared.persistence.base_model import BaseModel
 
 
 class UserModel(BaseModel):
@@ -16,7 +16,7 @@ class UserModel(BaseModel):
     email = Column(String(255), unique=True, nullable=False, index=True)
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
-    hashed_password = Column(String(60), nullable=False)  # bcrypt hash is always 60 chars
+    password = Column(String(60), nullable=False)  # bcrypt hash is always 60 chars
     role = Column(String(8), nullable=False)
     is_active = Column(Boolean)
 

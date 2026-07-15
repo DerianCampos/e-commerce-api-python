@@ -8,9 +8,9 @@ from src.app.features.user.domain.entities.user_entity import UserEntity
 from src.app.features.user.domain.repositories.user_repository import UserRepository
 from src.app.features.user.domain.value_objects.email import Email
 from src.app.features.user.infrastructure.models.user_model import UserModel
-from src.app.features.user.infrastructure.mappers.user_model_mapper import to_user_entity
-from app.shared.domain.repositories.base_repository import ID, T
-from app.shared.utils.log_util import log
+from src.app.features.user.infrastructure.mappers.user_model_mapper import UserModelMapper
+from src.app.shared.domain.repositories.base_repository import ID, T
+from src.app.shared.utils.log_util import log
 
 
 class UserRepositoryImpl(UserRepository):
@@ -27,7 +27,7 @@ class UserRepositoryImpl(UserRepository):
     async def find_by_id(self, entity_id: ID) -> Optional[UserEntity]:
         user_model: Optional[UserModel] = await self.db_session.get(UserModel, entity_id)
 
-        return to_user_entity(user_model)
+        return UserModelMapper.to_user_entity(user_model)
 
     async def find_by_email(self, email: Email) -> Optional[UserEntity]:
         stmt = select(UserModel).where(UserModel.email == email.value)
@@ -41,13 +41,13 @@ class UserRepositoryImpl(UserRepository):
             return None
 
         log.info(f"User with email {email.value} found.")
-        return to_user_entity(user_model)
+        return UserModelMapper.to_user_entity(user_model)
 
     async def find_by_name(self, record: str) -> Optional[UserEntity]:
         stmt = select(UserModel).where((UserModel.first_name == record) | (UserModel.last_name == record))
         result = await self.db_session.execute(stmt)
         user_model = result.scalar_one_or_none()
-        return to_user_entity(user_model)
+        return UserModelMapper.to_user_entity(user_model)
 
     async def save(self, entity: T) -> T:
         """
@@ -63,7 +63,7 @@ class UserRepositoryImpl(UserRepository):
                 email=str(entity.email.value) if hasattr(entity.email, 'value') else str(entity.email),
                 first_name=entity.first_name,
                 last_name=entity.last_name,
-                hashed_password=entity.hashed_password.value,
+                password=entity.password.value,
                 role=str(entity.role.value) if hasattr(entity.role, 'value') else str(entity.role),
                 is_active=bool(entity.is_active),
             )
@@ -72,7 +72,7 @@ class UserRepositoryImpl(UserRepository):
             await self.db_session.commit()
             await self.db_session.refresh(user_model)
 
-            return to_user_entity(user_model)
+            return UserModelMapper.to_user_entity(user_model)
 
         except IntegrityError as ie:
             await self.db_session.rollback()
@@ -96,7 +96,7 @@ class UserRepositoryImpl(UserRepository):
 
         result = await self.db_session.execute(stmt)
         models = result.scalars().all()
-        return [to_user_entity(m) for m in models]
+        return [UserModelMapper.to_user_entity(m) for m in models]
 
     async def exists(self, entity_id: ID) -> bool:
         user_model = await self.db_session.get(UserModel, entity_id)
@@ -111,7 +111,7 @@ class UserRepositoryImpl(UserRepository):
         existing.email = str(entity.email.value) if hasattr(entity.email, 'value') else str(entity.email)
         existing.first_name = entity.first_name
         existing.last_name = entity.last_name
-        existing.hashed_password = entity.hashed_password.value
+        existing.password = entity.password.value
         existing.role = str(entity.role.value) if hasattr(entity.role, 'value') else str(entity.role)
         existing.is_active = bool(entity.is_active)
 
@@ -119,7 +119,7 @@ class UserRepositoryImpl(UserRepository):
             self.db_session.add(existing)
             await self.db_session.commit()
             await self.db_session.refresh(existing)
-            return to_user_entity(existing)
+            return UserModelMapper.to_user_entity(existing)
 
         except IntegrityError as ie:
             await self.db_session.rollback()
@@ -140,7 +140,7 @@ class UserRepositoryImpl(UserRepository):
             return False
 
         try:
-            await self.db_session.delete(existing)
+            self.db_session.delete(existing)
             await self.db_session.commit()
             return True
 
