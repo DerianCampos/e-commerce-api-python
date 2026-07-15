@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import IntegrityError, OperationalError
 
-from src.app.composition import get_create_user_use_case, get_get_user_by_id_use_case, get_update_user_use_case, get_delete_user_use_case
+from src.app.composition.features.users import get_create_user_use_case, get_get_user_by_id_use_case, get_update_user_use_case, get_delete_user_use_case
 
 from src.app.features.user.application.dtos.user_dto import UserCreateRequest, UserResponse, UserUpdateRequest
 from src.app.features.user.application.use_cases.create_user import CreateUserUseCase
@@ -33,6 +34,10 @@ async def create_user(
 ) -> UserResponse:
     try:
         return await use_case.execute(payload)
+    except IntegrityError:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="A user with this email already exists.")
+    except OperationalError:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database unavailable.")
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
