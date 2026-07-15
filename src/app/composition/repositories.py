@@ -1,7 +1,7 @@
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.features.user.infrastructure.repository.user_repository_impl import UserRepositoryImpl
+from src.app.features.user.infrastructure.repository.user_repository_impl import UserRepositoryImpl
 
 from src.app.composition.infrastructure import get_database_session
 
