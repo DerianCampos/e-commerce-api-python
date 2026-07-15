@@ -2,9 +2,8 @@ from uuid import UUID
 
 from src.app.features.user.domain.exceptions.user_exception import UserDoesNotExistException
 from src.app.features.user.domain.repositories.user_repository import UserRepository
-from src.app.features.user.domain.entities.user_entity import UserEntity
-from app.shared.domain.value_objects.entity_id import EntityId
-from app.shared.utils.log_util import log
+from src.app.shared.domain.value_objects.entity_id import EntityId
+from src.app.shared.utils.log_util import log
 
 
 class DeleteUserUseCase:

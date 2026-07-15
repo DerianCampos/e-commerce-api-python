@@ -4,8 +4,8 @@ from src.app.features.user.application.dtos.user_dto import UserResponse
 from src.app.features.user.application.mappers.user_mapper import to_user_response
 from src.app.features.user.domain.exceptions.user_exception import UserDoesNotExistException
 from src.app.features.user.domain.repositories.user_repository import UserRepository
-from app.shared.domain.value_objects.entity_id import EntityId
-from app.shared.utils.log_util import log
+from src.app.shared.domain.value_objects.entity_id import EntityId
+from src.app.shared.utils.log_util import log
 
 
 class GetUserByIdUseCase:
@@ -18,7 +18,7 @@ class GetUserByIdUseCase:
             user_uuid = UUID(user_id)
             user_obj_id = EntityId(user_uuid)
 
-            existing_user = await self.user_repository.find_by_id(user_uuid)
+            existing_user = await self.user_repository.find_by_id(user_obj_id)
 
             if not existing_user:
                 log.warning(f"User not found with ID: {user_id}")

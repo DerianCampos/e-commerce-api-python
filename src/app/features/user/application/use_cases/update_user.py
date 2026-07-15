@@ -5,8 +5,8 @@ from src.app.features.user.application.mappers.user_mapper import to_user_respon
 from src.app.features.user.domain.exceptions.user_exception import UserDoesNotExistException
 from src.app.features.user.domain.repositories.user_repository import UserRepository
 from src.app.features.user.domain.value_objects.email import Email
-from app.shared.domain.value_objects.entity_id import EntityId
-from app.shared.utils.log_util import log
+from src.app.shared.domain.value_objects.entity_id import EntityId
+from src.app.shared.utils.log_util import log
 
 
 class UpdateUserUseCase:
@@ -30,15 +30,12 @@ class UpdateUserUseCase:
                 log.warning(f"Cannot update user. User not found with ID: {user_id}")
                 raise UserDoesNotExistException(user_entity_id)
 
-            # Apply partial updates (only non-None fields)
-            if user_update.email is not None:
-                existing_user.email = Email(user_update.email)
-
-            if user_update.first_name is not None:
-                existing_user.first_name = user_update.first_name
-
-            if user_update.last_name is not None:
-                existing_user.last_name = user_update.last_name
+            # Apply partial updates via entity method (triggers mark_as_updated)
+            existing_user.update(
+                email=Email(user_update.email) if user_update.email is not None else None,
+                first_name=user_update.first_name,
+                last_name=user_update.last_name,
+            )
 
             # Persist changes
             updated_user = await self.user_repository.update(existing_user)
