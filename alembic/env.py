@@ -1,22 +1,26 @@
 import asyncio
 import os
 import sys
-
 from logging.config import fileConfig
-from sqlalchemy import Connection
 
-from sqlalchemy import pool
+from sqlalchemy import Connection, pool
+from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
-from sqlalchemy.ext.asyncio import async_engine_from_config
 
 # Add the project's root directory to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
 from src.app.config.app_config import AppConfig
+from src.app.features.band.infrastructure.models.band_model import BandModel  # noqa: F401
+from src.app.features.product.infrastructure.models.product_model import ProductModel  # noqa: F401
+from src.app.features.product_variant.infrastructure.models.product_variant_model import (
+    ProductVariantModel,  # noqa: F401
+)
+from src.app.features.t_shirt_size.infrastructure.models.t_shirt_size_model import TShirtSizeModel  # noqa: F401
+from src.app.features.user.infrastructure.models.user_model import UserModel  # noqa: F401
 from src.app.shared.persistence.base_model import Base
-from src.app.features.user.infrastructure.models.user_model import UserModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -67,7 +71,7 @@ def run_migrations_offline() -> None:
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
-        dialect_opts={"paramstyle":  "named"},
+        dialect_opts={"paramstyle": "named"},
     )
 
     with context.begin_transaction():
@@ -76,10 +80,7 @@ def run_migrations_offline() -> None:
 
 def do_run_migrations(connection: Connection) -> None:
     """Configure context and run migrations."""
-    context.configure(
-        connection=connection,
-        target_metadata=target_metadata
-    )
+    context.configure(connection=connection, target_metadata=target_metadata)
 
     with context.begin_transaction():
         context.run_migrations()
