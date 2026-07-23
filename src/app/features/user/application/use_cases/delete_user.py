@@ -18,14 +18,13 @@ class DeleteUserUseCase:
 
         try:
             user_uuid = UUID(user_id)
-            user_entity_id = EntityId(user_uuid)
 
             # Check if user exists before attempting deletion
             user_exists = await self.user_repository.exists(user_uuid)
 
             if not user_exists:
                 log.warning(f"Cannot delete user. User not found with ID: {user_id}")
-                raise UserDoesNotExistException(user_entity_id)
+                raise UserDoesNotExistException(user_uuid)
 
             # Perform deletion
             deleted = await self.user_repository.delete(user_uuid)

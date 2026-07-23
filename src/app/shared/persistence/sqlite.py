@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
-from src.app.shared.logging.logger import get_logger
+from src.app.shared.logging.logging import get_logger
 from src.app.shared.persistence.db_connection import DbConnection
 
 log = get_logger(__name__)

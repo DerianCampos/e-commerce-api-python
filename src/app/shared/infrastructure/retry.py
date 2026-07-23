@@ -5,7 +5,7 @@ from typing import cast
 
 import backoff
 
-from src.app.shared.logging.logger import get_logger
+from src.app.shared.logging.logging import get_logger
 
 log = get_logger(__name__)
 

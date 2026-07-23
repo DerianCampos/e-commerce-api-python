@@ -10,6 +10,10 @@ class UserRepository(ABC):
         pass
 
     @abstractmethod
+    async def exists(self, user_id: str) -> bool:
+        pass
+
+    @abstractmethod
     async def save(self, user: UserEntity) -> UserEntity:
         pass
 
