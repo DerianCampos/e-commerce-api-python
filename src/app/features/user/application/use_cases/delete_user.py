@@ -1,9 +1,9 @@
 from uuid import UUID
 
-from src.app.features.user.application.exceptions.user_exception import UserDoesNotExistException
+from src.app.features.user.domain.exceptions.user_exception import UserDoesNotExistException
 from src.app.features.user.domain.repositories.user_repository import UserRepository
-from src.shared.domain.value_objects.entity_id import EntityId
-from src.shared.utils.log_util import log
+from src.app.shared.domain.value_objects.entity_id import EntityId
+from src.app.shared.utils.log_util import log
 
 
 class DeleteUserUseCase:
@@ -15,29 +15,16 @@ class DeleteUserUseCase:
         self.user_repository = user_repository
 
     async def execute(self, user_id: str) -> bool:
-        """
-        Delete a user by their ID.
 
-        Args:
-            user_id: The unique identifier of the user to delete.
-
-        Returns:
-            bool: True if the user was successfully deleted.
-
-        Raises:
-            ValueError: If the user ID format is invalid.
-            UserDoesNotExistException: If the user does not exist.
-        """
         try:
             user_uuid = UUID(user_id)
-            user_entity_id = EntityId(user_uuid)
 
             # Check if user exists before attempting deletion
             user_exists = await self.user_repository.exists(user_uuid)
 
             if not user_exists:
                 log.warning(f"Cannot delete user. User not found with ID: {user_id}")
-                raise UserDoesNotExistException(user_entity_id)
+                raise UserDoesNotExistException(user_uuid)
 
             # Perform deletion
             deleted = await self.user_repository.delete(user_uuid)

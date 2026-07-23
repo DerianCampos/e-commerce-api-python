@@ -3,9 +3,8 @@ import os
 import sys
 
 from logging.config import fileConfig
-from sqlite3 import Connection
+from sqlalchemy import Connection
 
-from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
@@ -16,8 +15,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 
 from src.app.config.app_config import AppConfig
-from src.shared.infrastructure.postgres.models.base_model import Base
-from src.app.features.user.infrastructure.postgres.models.user_model import UserModel
+from src.app.shared.persistence.base_model import Base
+from src.app.features.user.infrastructure.models.user_model import UserModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -35,7 +34,7 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 # Dynamically load database URL from AppConfig
-postgres_config: dict = AppConfig.instance().get_config("postgres", {})
+postgres_config: dict = AppConfig.instance().get_config("persistence.postgres", {})
 db_host = postgres_config.get("host", "")
 db_port = postgres_config.get("port", 5432)
 db_name = postgres_config.get("dbname", "")

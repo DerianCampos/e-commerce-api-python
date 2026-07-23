@@ -1,10 +1,11 @@
 from uuid import UUID
+
 from src.app.features.user.application.dtos.user_dto import UserResponse
-from src.app.features.user.application.dtos.user_dto_mapper import map_entity_to_dto_user
-from src.app.features.user.application.exceptions.user_exception import UserDoesNotExistException
+from src.app.features.user.application.mappers.user_mapper import to_user_response
+from src.app.features.user.domain.exceptions.user_exception import UserDoesNotExistException
 from src.app.features.user.domain.repositories.user_repository import UserRepository
-from src.shared.domain.value_objects.entity_id import EntityId
-from src.shared.utils.log_util import log
+from src.app.shared.domain.value_objects.entity_id import EntityId
+from src.app.shared.utils.log_util import log
 
 
 class GetUserByIdUseCase:
@@ -15,15 +16,14 @@ class GetUserByIdUseCase:
     async def execute(self, user_id: str) -> UserResponse:
         try:
             user_uuid = UUID(user_id)
-            user_obj_id = EntityId(user_uuid)
 
             existing_user = await self.user_repository.find_by_id(user_uuid)
 
             if not existing_user:
                 log.warning(f"User not found with ID: {user_id}")
-                raise UserDoesNotExistException(user_obj_id)
+                raise UserDoesNotExistException(user_uuid)
 
-            response_dto = map_entity_to_dto_user(existing_user)
+            response_dto = to_user_response(existing_user)
 
             return response_dto
 

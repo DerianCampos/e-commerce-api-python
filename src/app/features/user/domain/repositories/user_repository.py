@@ -1,15 +1,27 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from typing import Optional
 
 from src.app.features.user.domain.entities.user_entity import UserEntity
-from src.app.features.user.domain.value_objects.email import Email
-from src.shared.domain.repositories.base_repository import BaseRepository
-from src.shared.domain.value_objects.entity_id import EntityId
 
-
-class UserRepository(BaseRepository[UserEntity, EntityId]):
+class UserRepository(ABC):
 
     @abstractmethod
-    async def find_by_email(self, email: Email) -> Optional[UserEntity]:
-
+    async def find_by_id(self, user_id: str) -> Optional[UserEntity]:
         pass
+
+    @abstractmethod
+    async def exists(self, user_id: str) -> bool:
+        pass
+
+    @abstractmethod
+    async def save(self, user: UserEntity) -> UserEntity:
+        pass
+
+    @abstractmethod
+    async def delete(self, user_id: str) -> bool:
+        pass
+
+    @abstractmethod
+    async def update(self, user_id: str, user: UserEntity) -> Optional[UserEntity]:
+        pass
+    
