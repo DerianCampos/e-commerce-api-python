@@ -16,13 +16,12 @@ class GetUserByIdUseCase:
     async def execute(self, user_id: str) -> UserResponse:
         try:
             user_uuid = UUID(user_id)
-            user_obj_id = EntityId(user_uuid)
 
-            existing_user = await self.user_repository.find_by_id(user_obj_id)
+            existing_user = await self.user_repository.find_by_id(user_uuid)
 
             if not existing_user:
                 log.warning(f"User not found with ID: {user_id}")
-                raise UserDoesNotExistException(user_obj_id)
+                raise UserDoesNotExistException(user_uuid)
 
             response_dto = to_user_response(existing_user)
 
