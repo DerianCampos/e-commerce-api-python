@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from src.app.config.app_config import AppConfig
 from src.app.shared.persistence.base_model import Base
 from src.app.features.user.infrastructure.models.user_model import UserModel
+from src.app.features.band.infrastructure.models.band_model import BandModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
