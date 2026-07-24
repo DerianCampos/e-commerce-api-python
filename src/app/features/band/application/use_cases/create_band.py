@@ -1,8 +1,9 @@
 from src.app.features.band.application.dtos.band_dto import BandCreateRequest, BandResponse
 from src.app.features.band.application.mappers.band_mapper import to_band_entity, to_band_response
 from src.app.features.band.domain.repositories.band_repository import BandRepository
-from src.app.shared.utils.log_util import log
+from src.app.shared.logging.logging import get_logger
 
+log = get_logger(__name__)
 
 class CreateBandUseCase:
     def __init__(self, band_repository: BandRepository):
