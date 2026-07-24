@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.app.config.app_config import AppConfig
 
 from src.app.features.user.presentation.user_routes import router as user_router
+from src.app.features.band.presentation.band_routes import router as band_router
 
 
 ENV = os.getenv("APP_ENV", "local")
@@ -44,3 +45,4 @@ def get_health_check():
     return "Ok"
 
 fastapi_app.include_router(user_router, prefix="/api/v1/user", tags=["User"])
+fastapi_app.include_router(band_router, prefix="/api/v1/band", tags=["Band"])
