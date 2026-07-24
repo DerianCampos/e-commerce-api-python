@@ -15,13 +15,12 @@ class GetBandByIdUseCase:
     async def execute(self, band_id: str) -> BandResponse:
         try:
             band_uuid = UUID(band_id)
-            band_obj_id = EntityId(band_uuid)
 
-            existing_band = await self.band_repository.find_by_id(band_obj_id)
+            existing_band = await self.band_repository.find_by_id(band_uuid)
 
             if not existing_band:
                 log.warning(f"Band not found with ID: {band_id}")
-                raise BandDoesNotExistException(band_obj_id)
+                raise BandDoesNotExistException(band_uuid)
 
             return to_band_response(existing_band)
 

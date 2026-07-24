@@ -97,7 +97,7 @@ class BandRepositoryImpl(BandRepository):
             return False
 
         try:
-            self.db_session.delete(existing)
+            await self.db_session.delete(existing)
             await self.db_session.commit()
             return True
 
