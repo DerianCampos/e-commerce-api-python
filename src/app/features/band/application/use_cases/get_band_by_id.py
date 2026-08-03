@@ -20,7 +20,7 @@ class GetBandByIdUseCase:
 
             if not existing_band:
                 log.warning(f"Band not found with ID: {band_id}")
-                raise BandDoesNotExistException(band_uuid)
+                raise BandDoesNotExistException(EntityId(band_uuid))
 
             return to_band_response(existing_band)
 

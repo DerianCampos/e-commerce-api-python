@@ -21,7 +21,7 @@ class GetUserByIdUseCase:
 
             if not existing_user:
                 log.warning(f"User not found with ID: {user_id}")
-                raise UserDoesNotExistException(user_uuid)
+                raise UserDoesNotExistException(EntityId(user_uuid))
 
             response_dto = to_user_response(existing_user)
 
