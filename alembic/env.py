@@ -18,6 +18,11 @@ from src.app.config.app_config import AppConfig
 from src.app.shared.persistence.base_model import Base
 from src.app.features.user.infrastructure.models.user_model import UserModel
 from src.app.features.band.infrastructure.models.band_model import BandModel
+from src.app.features.product.infrastructure.models.product_model import ProductModel
+from src.app.features.product_variant.infrastructure.models.product_variant_model import ProductVariantModel
+from src.app.features.t_shirt_size.infrastructure.models.t_shirt_size_model import TShirtSizeModel
+from src.app.features.order.infrastructure.models.order_model import OrderModel
+from src.app.features.order_item.infrastructure.models.order_item_model import OrderItemModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
