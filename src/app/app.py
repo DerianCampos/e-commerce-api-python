@@ -4,10 +4,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.app.config.app_config import AppConfig
-
-from src.app.features.user.presentation.user_routes import router as user_router
 from src.app.features.band.presentation.band_routes import router as band_router
-
+from src.app.features.order.presentation.order_routes import router as order_router
+from src.app.features.order_item.presentation.order_item_routes import router as order_item_router
+from src.app.features.product.presentation.product_routes import router as product_router
+from src.app.features.product_variant.presentation.product_variant_routes import router as product_variant_router
+from src.app.features.t_shirt_size.presentation.t_shirt_size_routes import router as t_shirt_size_router
+from src.app.features.user.presentation.user_routes import router as user_router
 
 ENV = os.getenv("APP_ENV", "local")
 
@@ -46,3 +49,8 @@ def get_health_check():
 
 fastapi_app.include_router(user_router, prefix="/api/v1/user", tags=["User"])
 fastapi_app.include_router(band_router, prefix="/api/v1/band", tags=["Band"])
+fastapi_app.include_router(product_router, prefix="/api/v1/product", tags=["Product"])
+fastapi_app.include_router(product_variant_router, prefix="/api/v1/product-variant", tags=["ProductVariant"])
+fastapi_app.include_router(t_shirt_size_router, prefix="/api/v1/t-shirt-size", tags=["TShirtSize"])
+fastapi_app.include_router(order_router, prefix="/api/v1/order", tags=["Order"])
+fastapi_app.include_router(order_item_router, prefix="/api/v1/order-item", tags=["OrderItem"])
