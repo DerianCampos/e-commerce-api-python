@@ -26,9 +26,7 @@ if ENV not in ("local", "container"):
     fastapi_app.openapi_url = None
 
 # --- CORS Origins from config ---
-origins = [
-    "http://localhost:8080"
-]
+origins = config.get_config("cors.origins", [])
 
 fastapi_app.add_middleware(
     CORSMiddleware,
