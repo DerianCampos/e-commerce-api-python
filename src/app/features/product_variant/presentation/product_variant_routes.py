@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError, OperationalError
@@ -31,8 +31,8 @@ router = APIRouter()
 
 @router.get("/", response_model=List[ProductVariantResponse], status_code=status.HTTP_200_OK)
 async def list_product_variants(
-    limit: int = Query(None, ge=1),
-    offset: int = Query(None, ge=0),
+    limit: Optional[int] = Query(None, ge=1),
+    offset: Optional[int] = Query(None, ge=0),
     use_case: ListProductVariantsUseCase = Depends(get_list_product_variants_use_case),
 ) -> List[ProductVariantResponse]:
     try:

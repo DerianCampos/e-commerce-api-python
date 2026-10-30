@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
 
@@ -10,7 +12,7 @@ class ProductVariantResponse(BaseModel):
     size_id: str
     color: str
     sku: str
-    unit_price: float
+    unit_price: Decimal
     stock_quantity: int
 
 

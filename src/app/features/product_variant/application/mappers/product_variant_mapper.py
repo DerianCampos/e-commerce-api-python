@@ -19,7 +19,7 @@ def to_product_variant_response(variant_entity: Union[BaseModel, ProductVariantE
         size_id=str(variant_entity.size_id.value),
         color=variant_entity.color,
         sku=str(variant_entity.sku.value),
-        unit_price=float(variant_entity.unit_price),
+        unit_price=variant_entity.unit_price,
         stock_quantity=int(variant_entity.stock_quantity),
     )
 
