@@ -10,6 +10,8 @@ class BandModelMapper:
             "name": band_entity.name,
             "country": band_entity.country,
             "genre": band_entity.genre,
+            "description": band_entity.description,
+            "image_url": band_entity.image_url,
             "created_at": band_entity.created_at,
             "updated_at": band_entity.updated_at,
         }
@@ -23,6 +25,8 @@ class BandModelMapper:
             name=band_model.name,
             country=band_model.country,
             genre=band_model.genre,
+            description=band_model.description,
+            image_url=band_model.image_url,
             created_at=band_model.created_at,
             updated_at=band_model.updated_at,
         )

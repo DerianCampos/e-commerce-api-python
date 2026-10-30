@@ -28,3 +28,7 @@ class BandRepository(ABC):
     @abstractmethod
     async def find_all(self, limit: Optional[int] = None, offset: Optional[int] = None) -> List[BandEntity]:
         pass
+
+    @abstractmethod
+    async def find_by_ids(self, band_ids) -> List[BandEntity]:
+        pass

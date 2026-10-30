@@ -27,6 +27,8 @@ class BandRepositoryImpl(BandRepository):
                 name=entity.name,
                 country=entity.country,
                 genre=entity.genre,
+                description=entity.description,
+                image_url=entity.image_url,
             )
 
             self.db_session.add(band_model)
@@ -59,6 +61,15 @@ class BandRepositoryImpl(BandRepository):
         models = result.scalars().all()
         return [BandModelMapper.to_band_entity(m) for m in models]
 
+    async def find_by_ids(self, band_ids) -> List[BandEntity]:
+        if not band_ids:
+            return []
+
+        stmt = select(BandModel).where(BandModel.id.in_(band_ids))
+        result = await self.db_session.execute(stmt)
+        models = result.scalars().all()
+        return [BandModelMapper.to_band_entity(m) for m in models]
+
     async def exists(self, entity_id: ID) -> bool:
         band_model = await self.db_session.get(BandModel, entity_id)
         return band_model is not None
@@ -71,6 +82,8 @@ class BandRepositoryImpl(BandRepository):
         existing.name = entity.name
         existing.country = entity.country
         existing.genre = entity.genre
+        existing.description = entity.description
+        existing.image_url = entity.image_url
 
         try:
             self.db_session.add(existing)
