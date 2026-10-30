@@ -15,6 +15,7 @@ class ProductEntity(BaseEntity):
         fit: Fit,
         band_id: Optional[EntityId],
         is_active: bool,
+        image_url: Optional[str] = None,
         created_at: Optional[datetime] = None,
         updated_at: Optional[datetime] = None,
     ):
@@ -23,6 +24,7 @@ class ProductEntity(BaseEntity):
         self._fit = fit
         self._band_id = band_id
         self._is_active = is_active
+        self._image_url = image_url
         super().__init__(id, created_at, updated_at)
 
     @property
@@ -45,6 +47,10 @@ class ProductEntity(BaseEntity):
     def is_active(self) -> bool:
         return self._is_active
 
+    @property
+    def image_url(self) -> Optional[str]:
+        return self._image_url
+
     @classmethod
     def create(
         cls,
@@ -53,6 +59,7 @@ class ProductEntity(BaseEntity):
         fit: Fit,
         band_id: Optional[EntityId],
         is_active: bool,
+        image_url: Optional[str] = None,
         created_at: Optional[datetime] = None,
         updated_at: Optional[datetime] = None,
     ) -> "ProductEntity":
@@ -63,6 +70,7 @@ class ProductEntity(BaseEntity):
             fit=fit,
             band_id=band_id,
             is_active=is_active,
+            image_url=image_url,
             created_at=created_at,
             updated_at=updated_at,
         )
@@ -74,6 +82,7 @@ class ProductEntity(BaseEntity):
         fit: Optional[Fit] = None,
         band_id: Optional[EntityId] = None,
         is_active: Optional[bool] = None,
+        image_url: Optional[str] = None,
     ) -> None:
         if name is not None:
             self._name = name
@@ -85,4 +94,6 @@ class ProductEntity(BaseEntity):
             self._band_id = band_id
         if is_active is not None:
             self._is_active = is_active
+        if image_url is not None:
+            self._image_url = image_url
         self.mark_as_updated()

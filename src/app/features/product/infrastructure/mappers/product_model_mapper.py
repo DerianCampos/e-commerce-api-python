@@ -13,6 +13,7 @@ class ProductModelMapper:
             "fit": product_entity.fit.value,
             "band_id": str(product_entity.band_id.value) if product_entity.band_id else None,
             "is_active": product_entity.is_active,
+            "image_url": product_entity.image_url,
             "created_at": product_entity.created_at,
             "updated_at": product_entity.updated_at,
         }
@@ -28,6 +29,7 @@ class ProductModelMapper:
             fit=Fit.from_str(product_model.fit),
             band_id=EntityId(product_model.band_id) if product_model.band_id else None,
             is_active=product_model.is_active,
+            image_url=product_model.image_url,
             created_at=product_model.created_at,
             updated_at=product_model.updated_at,
         )
