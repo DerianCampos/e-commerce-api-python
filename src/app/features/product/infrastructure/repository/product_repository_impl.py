@@ -58,10 +58,14 @@ class ProductRepositoryImpl(ProductRepository):
         offset: Optional[int] = None,
         band_id=None,
         q: Optional[str] = None,
+        newest_first: bool = False,
     ) -> List[T]:
         stmt = select(ProductModel)
         stmt = self._apply_filters(stmt, band_id, q)
-        stmt = stmt.order_by(ProductModel.created_at.asc(), ProductModel.id.asc())
+        if newest_first:
+            stmt = stmt.order_by(ProductModel.created_at.desc(), ProductModel.id.desc())
+        else:
+            stmt = stmt.order_by(ProductModel.created_at.asc(), ProductModel.id.asc())
         if offset:
             stmt = stmt.offset(offset)
         if limit:
@@ -80,6 +84,8 @@ class ProductRepositoryImpl(ProductRepository):
 
     @staticmethod
     def _apply_filters(stmt, band_id=None, q: Optional[str] = None):
+        # Storefront catalog: unpublished products are never listed or counted.
+        stmt = stmt.where(ProductModel.is_active.is_(True))
         if band_id:
             stmt = stmt.where(ProductModel.band_id == band_id)
         if q:

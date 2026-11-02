@@ -32,6 +32,7 @@ class ProductRepository(ABC):
         offset: Optional[int] = None,
         band_id=None,
         q: Optional[str] = None,
+        newest_first: bool = False,
     ) -> List[ProductEntity]:
         pass
 

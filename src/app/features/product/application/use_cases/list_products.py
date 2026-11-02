@@ -35,8 +35,12 @@ class ListProductsUseCase:
         per_page: int = 20,
         band_id: Optional[str] = None,
         q: Optional[str] = None,
+        order: Optional[str] = None,
     ) -> PaginatedResponse[ProductDetailResponse]:
         try:
+            if order not in (None, "latest", "oldest"):
+                raise ValueError(f"Unsupported order: {order}")
+
             band_uuid = UUID(band_id) if band_id else None
             normalized_q = q.strip() if q else None
 
@@ -46,6 +50,7 @@ class ListProductsUseCase:
                 offset=(page - 1) * per_page,
                 band_id=band_uuid,
                 q=normalized_q,
+                newest_first=order == "latest",
             )
 
             items = await self._to_detail_responses(products)

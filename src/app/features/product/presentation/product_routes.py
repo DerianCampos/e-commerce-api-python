@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Literal, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError, OperationalError
@@ -33,10 +33,13 @@ async def list_products(
     per_page: int = Query(20, ge=1, le=100, alias="perPage"),
     band_id: Optional[str] = Query(None, alias="bandId"),
     q: Optional[str] = Query(None),
+    order: Optional[Literal["latest", "oldest"]] = Query(
+        None, description="Sort by creation date (latest first or oldest first)."
+    ),
     use_case: ListProductsUseCase = Depends(get_list_products_use_case),
 ) -> PaginatedResponse[ProductDetailResponse]:
     try:
-        return await use_case.execute(page=page, per_page=per_page, band_id=band_id, q=q)
+        return await use_case.execute(page=page, per_page=per_page, band_id=band_id, q=q, order=order)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
