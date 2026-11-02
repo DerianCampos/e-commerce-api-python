@@ -51,7 +51,7 @@ class BandRepositoryImpl(BandRepository):
             raise
 
     async def find_all(self, limit: Optional[int] = None, offset: Optional[int] = None) -> List[T]:
-        stmt = select(BandModel)
+        stmt = select(BandModel).order_by(BandModel.created_at.asc(), BandModel.name.asc())
         if offset:
             stmt = stmt.offset(offset)
         if limit:
