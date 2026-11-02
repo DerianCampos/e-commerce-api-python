@@ -36,6 +36,7 @@ class UpdateProductUseCase:
                 fit=Fit.from_str(product_update.fit) if product_update.fit is not None else None,
                 band_id=band_id,
                 is_active=product_update.is_active,
+                image_url=product_update.image_url,
             )
 
             updated_product = await self.product_repository.update(existing_product)

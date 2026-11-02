@@ -28,6 +28,8 @@ class UpdateBandUseCase:
                 name=band_update.name,
                 country=band_update.country,
                 genre=band_update.genre,
+                description=band_update.description,
+                image_url=band_update.image_url,
             )
 
             updated_band = await self.band_repository.update(existing_band)

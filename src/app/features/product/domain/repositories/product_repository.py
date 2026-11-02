@@ -26,5 +26,16 @@ class ProductRepository(ABC):
         pass
 
     @abstractmethod
-    async def find_all(self, limit: Optional[int] = None, offset: Optional[int] = None) -> List[ProductEntity]:
+    async def find_all(
+        self,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
+        band_id=None,
+        q: Optional[str] = None,
+        newest_first: bool = False,
+    ) -> List[ProductEntity]:
+        pass
+
+    @abstractmethod
+    async def count_all(self, band_id=None, q: Optional[str] = None) -> int:
         pass

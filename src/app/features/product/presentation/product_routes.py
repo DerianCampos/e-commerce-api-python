@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Literal, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError, OperationalError
@@ -12,6 +12,7 @@ from src.app.composition.features.products import (
 )
 from src.app.features.product.application.dtos.product_dto import (
     ProductCreateRequest,
+    ProductDetailResponse,
     ProductResponse,
     ProductUpdateRequest,
 )
@@ -21,27 +22,35 @@ from src.app.features.product.application.use_cases.get_product_by_id import Get
 from src.app.features.product.application.use_cases.list_products import ListProductsUseCase
 from src.app.features.product.application.use_cases.update_product import UpdateProductUseCase
 from src.app.features.product.domain.exceptions.product_exception import ProductDoesNotExistException
+from src.app.shared.application.dtos.pagination_dto import PaginatedResponse
 
 router = APIRouter()
 
 
-@router.get("/", response_model=List[ProductResponse], status_code=status.HTTP_200_OK)
+@router.get("/", response_model=PaginatedResponse[ProductDetailResponse], status_code=status.HTTP_200_OK)
 async def list_products(
-    limit: Optional[int] = Query(None, ge=1),
-    offset: Optional[int] = Query(None, ge=0),
+    page: int = Query(1, ge=1),
+    per_page: int = Query(20, ge=1, le=100, alias="perPage"),
+    band_id: Optional[str] = Query(None, alias="bandId"),
+    q: Optional[str] = Query(None),
+    order: Optional[Literal["latest", "oldest"]] = Query(
+        None, description="Sort by creation date (latest first or oldest first)."
+    ),
     use_case: ListProductsUseCase = Depends(get_list_products_use_case),
-) -> List[ProductResponse]:
+) -> PaginatedResponse[ProductDetailResponse]:
     try:
-        return await use_case.execute(limit=limit, offset=offset)
+        return await use_case.execute(page=page, per_page=per_page, band_id=band_id, q=q, order=order)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
-@router.get("/{product_id}", response_model=ProductResponse, status_code=status.HTTP_200_OK)
+@router.get("/{product_id}", response_model=ProductDetailResponse, status_code=status.HTTP_200_OK)
 async def get_product_by_id(
     product_id: str,
     use_case: GetProductByIdUseCase = Depends(get_get_product_by_id_use_case),
-) -> ProductResponse:
+) -> ProductDetailResponse:
     try:
         return await use_case.execute(product_id)
     except ProductDoesNotExistException as e:

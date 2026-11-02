@@ -11,6 +11,8 @@ class BandResponse(BaseModel):
     name: str
     country: Optional[str] = None
     genre: Optional[str] = None
+    description: Optional[str] = None
+    image_url: Optional[str] = None
 
 
 class BandCreateRequest(BaseModel):
@@ -19,6 +21,8 @@ class BandCreateRequest(BaseModel):
     name: str
     country: Optional[str] = None
     genre: Optional[str] = None
+    description: Optional[str] = None
+    image_url: Optional[str] = None
 
 
 class BandUpdateRequest(BaseModel):
@@ -27,3 +31,5 @@ class BandUpdateRequest(BaseModel):
     name: Optional[str] = None
     country: Optional[str] = None
     genre: Optional[str] = None
+    description: Optional[str] = None
+    image_url: Optional[str] = None

@@ -7,6 +7,7 @@ Provides standard pagination envelope structure for list endpoints.
 from typing import Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict, Field
+from pydantic.alias_generators import to_camel
 
 T = TypeVar("T")
 
@@ -18,7 +19,11 @@ class PaginatedResponse(BaseModel, Generic[T]):
     Contains pagination metadata and the list of items.
     """
 
-    model_config = ConfigDict(json_schema_extra={"example": {"total": 42, "page": 1, "per_page": 20, "items": []}})
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        json_schema_extra={"example": {"total": 42, "page": 1, "perPage": 20, "items": []}},
+    )
 
     total: int = Field(..., description="Total number of items available", ge=0)
     page: int = Field(..., description="Current page number (1-indexed)", ge=1)

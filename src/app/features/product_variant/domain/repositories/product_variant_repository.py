@@ -32,3 +32,7 @@ class ProductVariantRepository(ABC):
     @abstractmethod
     async def find_by_product_id(self, product_id) -> List[ProductVariantEntity]:
         pass
+
+    @abstractmethod
+    async def find_by_product_ids(self, product_ids) -> List[ProductVariantEntity]:
+        pass

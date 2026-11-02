@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError, OperationalError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -30,6 +30,7 @@ class ProductRepositoryImpl(ProductRepository):
                 fit=entity.fit.value,
                 band_id=entity.band_id.value if entity.band_id and hasattr(entity.band_id, "value") else entity.band_id,
                 is_active=bool(entity.is_active),
+                image_url=entity.image_url,
             )
 
             self.db_session.add(product_model)
@@ -51,8 +52,20 @@ class ProductRepositoryImpl(ProductRepository):
             log.error(f"Database error saving product: {e}")
             raise
 
-    async def find_all(self, limit: Optional[int] = None, offset: Optional[int] = None) -> List[T]:
+    async def find_all(
+        self,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
+        band_id=None,
+        q: Optional[str] = None,
+        newest_first: bool = False,
+    ) -> List[T]:
         stmt = select(ProductModel)
+        stmt = self._apply_filters(stmt, band_id, q)
+        if newest_first:
+            stmt = stmt.order_by(ProductModel.created_at.desc(), ProductModel.id.desc())
+        else:
+            stmt = stmt.order_by(ProductModel.created_at.asc(), ProductModel.id.asc())
         if offset:
             stmt = stmt.offset(offset)
         if limit:
@@ -61,6 +74,23 @@ class ProductRepositoryImpl(ProductRepository):
         result = await self.db_session.execute(stmt)
         models = result.scalars().all()
         return [ProductModelMapper.to_product_entity(m) for m in models]
+
+    async def count_all(self, band_id=None, q: Optional[str] = None) -> int:
+        stmt = select(func.count()).select_from(ProductModel)
+        stmt = self._apply_filters(stmt, band_id, q)
+
+        result = await self.db_session.execute(stmt)
+        return int(result.scalar_one())
+
+    @staticmethod
+    def _apply_filters(stmt, band_id=None, q: Optional[str] = None):
+        # Storefront catalog: unpublished products are never listed or counted.
+        stmt = stmt.where(ProductModel.is_active.is_(True))
+        if band_id:
+            stmt = stmt.where(ProductModel.band_id == band_id)
+        if q:
+            stmt = stmt.where(ProductModel.name.ilike(f"%{q}%"))
+        return stmt
 
     async def exists(self, entity_id: ID) -> bool:
         product_model = await self.db_session.get(ProductModel, entity_id)
@@ -80,6 +110,7 @@ class ProductRepositoryImpl(ProductRepository):
             entity.band_id.value if entity.band_id and hasattr(entity.band_id, "value") else entity.band_id
         )
         existing.is_active = bool(entity.is_active)
+        existing.image_url = entity.image_url
 
         try:
             self.db_session.add(existing)

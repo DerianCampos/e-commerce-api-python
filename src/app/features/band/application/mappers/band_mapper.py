@@ -12,6 +12,8 @@ def to_band_response(band_entity: Union[BaseModel, BandEntity]) -> BandResponse:
         name=band_entity.name,
         country=band_entity.country,
         genre=band_entity.genre,
+        description=band_entity.description,
+        image_url=band_entity.image_url,
     )
 
 
@@ -20,4 +22,6 @@ def to_band_entity(band_dto: BandCreateRequest) -> BandEntity:
         name=band_dto.name,
         country=band_dto.country,
         genre=band_dto.genre,
+        description=band_dto.description,
+        image_url=band_dto.image_url,
     )

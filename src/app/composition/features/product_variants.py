@@ -1,6 +1,11 @@
 from fastapi import Depends
 
-from src.app.composition.repositories import get_product_variant_repository
+from src.app.composition.repositories import (
+    get_product_repository,
+    get_product_variant_repository,
+    get_t_shirt_size_repository,
+)
+from src.app.features.product.infrastructure.repository.product_repository_impl import ProductRepositoryImpl
 from src.app.features.product_variant.application.use_cases.create_product_variant import CreateProductVariantUseCase
 from src.app.features.product_variant.application.use_cases.delete_product_variant import DeleteProductVariantUseCase
 from src.app.features.product_variant.application.use_cases.get_product_variant_by_id import (
@@ -11,12 +16,17 @@ from src.app.features.product_variant.application.use_cases.update_product_varia
 from src.app.features.product_variant.infrastructure.repository.product_variant_repository_impl import (
     ProductVariantRepositoryImpl,
 )
+from src.app.features.t_shirt_size.infrastructure.repository.t_shirt_size_repository_impl import (
+    TShirtSizeRepositoryImpl,
+)
 
 
 async def get_create_product_variant_use_case(
     repo: ProductVariantRepositoryImpl = Depends(get_product_variant_repository),
+    product_repo: ProductRepositoryImpl = Depends(get_product_repository),
+    size_repo: TShirtSizeRepositoryImpl = Depends(get_t_shirt_size_repository),
 ) -> CreateProductVariantUseCase:
-    return CreateProductVariantUseCase(repo)
+    return CreateProductVariantUseCase(repo, product_repo, size_repo)
 
 
 async def get_get_product_variant_by_id_use_case(

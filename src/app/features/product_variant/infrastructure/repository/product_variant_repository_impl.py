@@ -71,6 +71,16 @@ class ProductVariantRepositoryImpl(ProductVariantRepository):
         models = result.scalars().all()
         return [ProductVariantModelMapper.to_product_variant_entity(m) for m in models]
 
+    async def find_by_product_ids(self, product_ids) -> List[T]:
+        if not product_ids:
+            return []
+
+        stmt = select(ProductVariantModel).where(ProductVariantModel.product_id.in_(product_ids))
+
+        result = await self.db_session.execute(stmt)
+        models = result.scalars().all()
+        return [ProductVariantModelMapper.to_product_variant_entity(m) for m in models]
+
     async def exists(self, entity_id: ID) -> bool:
         variant_model = await self.db_session.get(ProductVariantModel, entity_id)
         return variant_model is not None

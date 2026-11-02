@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Integer, Numeric, String
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, Numeric, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 
@@ -13,8 +13,10 @@ class OrderItemModel(BaseModel):
 
     __tablename__ = "order_items"
 
-    order_id = Column(UUID(as_uuid=True), nullable=False, index=True)
-    product_variant_id = Column(UUID(as_uuid=True), nullable=False, index=True)
+    order_id = Column(UUID(as_uuid=True), ForeignKey("orders.id", ondelete="CASCADE"), nullable=False, index=True)
+    product_variant_id = Column(
+        UUID(as_uuid=True), ForeignKey("product_variants.id", ondelete="RESTRICT"), nullable=False, index=True
+    )
     product_name = Column(String(150), nullable=False)
     band_name = Column(String(150), nullable=True)
     size = Column(String(10), nullable=False)
