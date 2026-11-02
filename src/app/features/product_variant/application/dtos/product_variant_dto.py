@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
 
@@ -22,7 +22,10 @@ class ProductVariantCreateRequest(BaseModel):
     product_id: str
     size_id: str
     color: str = "black"
-    sku: str
+    sku: str | None = Field(
+        default=None,
+        description="Optional. Generated from the product name, size, and color when omitted.",
+    )
     unit_price: float
     stock_quantity: int = 0
 

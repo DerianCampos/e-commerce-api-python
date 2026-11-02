@@ -1,5 +1,5 @@
 from decimal import Decimal
-from typing import Union
+from typing import Optional, Union
 
 from pydantic import BaseModel
 
@@ -24,12 +24,16 @@ def to_product_variant_response(variant_entity: Union[BaseModel, ProductVariantE
     )
 
 
-def to_product_variant_entity(variant_dto: ProductVariantCreateRequest) -> ProductVariantEntity:
+def to_product_variant_entity(
+    variant_dto: ProductVariantCreateRequest, sku: Optional[str] = None
+) -> ProductVariantEntity:
+    resolved_sku = sku if sku is not None else variant_dto.sku
+
     return ProductVariantEntity.create(
         product_id=EntityId.from_string(variant_dto.product_id),
         size_id=EntityId.from_string(variant_dto.size_id),
         color=variant_dto.color,
-        sku=Sku(variant_dto.sku),
+        sku=Sku(resolved_sku),
         unit_price=Decimal(str(variant_dto.unit_price)),
         stock_quantity=variant_dto.stock_quantity,
     )
